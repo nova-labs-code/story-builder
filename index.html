@@ -3,26 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Story Builder</title>
+<title>Unified Transcriber</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Story Builder</h1>
-    <div id="storyArea"></div>
+    <h1>Unified Transcriber</h1>
 
-    <div class="buttons">
-      <button id="randomBtn">Random Sentence</button>
-      <button id="writeBtn">Write Your Own</button>
-      <button id="wordBtn">Include Random Word</button>
-    </div>
-    
-    <div id="inputArea" class="hidden">
-      <input type="text" id="userInput" placeholder="Type your sentence...">
-      <button id="submitBtn">Add Sentence</button>
+    <!-- Tab Bar -->
+    <div class="tabs">
+      <button class="tabBtn active" data-tab="voice">Voice</button>
+      <button class="tabBtn" data-tab="video">Video</button>
+      <button class="tabBtn" data-tab="translate">Translate</button>
+      <button class="tabBtn" data-tab="meeting">Meeting</button>
+      <button class="tabBtn" data-tab="notes">Notes</button>
     </div>
 
-    <button id="resetBtn">Start Over</button>
+    <!-- Tab Contents -->
+    <div id="voiceTab" class="tabContent">
+      <button id="startVoice">🎤 Start Recording</button>
+      <button id="stopVoice">⏹ Stop</button>
+    </div>
+
+    <div id="videoTab" class="tabContent hidden">
+      <input type="text" id="videoURL" placeholder="Paste video URL">
+      <button id="transcribeVideo">Transcribe Video</button>
+    </div>
+
+    <div id="translateTab" class="tabContent hidden">
+      <select id="langSelect">
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+      </select>
+      <button id="translateBtn">Translate Transcript</button>
+    </div>
+
+    <div id="meetingTab" class="tabContent hidden">
+      <button id="simulateMeeting">Simulate Meeting Transcript</button>
+    </div>
+
+    <div id="notesTab" class="tabContent hidden">
+      <input type="text" id="noteInput" placeholder="Type a quick note">
+      <button id="addNote">Add Note</button>
+    </div>
+
+    <!-- Transcript Area -->
+    <div id="transcriptArea"></div>
+    <button id="copyBtn">📋 Copy Transcript</button>
+    <button id="resetBtn">🗑 Reset</button>
   </div>
 
 <script src="script.js"></script>
