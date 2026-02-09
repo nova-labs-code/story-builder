@@ -1,129 +1,74 @@
-// Tabs
-const tabs = document.querySelectorAll('.tabBtn');
-const tabContents = document.querySelectorAll('.tabContent');
+const textInput = document.getElementById('textInput');
+const translateBtn = document.getElementById('translateBtn');
+const emojiOutput = document.getElementById('emojiOutput');
+const copyBtn = document.getElementById('copyBtn');
+const clearBtn = document.getElementById('clearBtn');
 
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const target = tab.dataset.tab;
-    tabContents.forEach(tc => tc.classList.add('hidden'));
-    document.getElementById(target + 'Tab').classList.remove('hidden');
+// Huge emoji dictionary
+const emojiDict = {
+  // Emotions
+  "love":"❤️","heart":"❤️","happy":"😊","smile":"😊","laugh":"😂","sad":"😢",
+  "cry":"😢","angry":"😡","surprised":"😲","excited":"🤩","cool":"😎",
+  "sleep":"😴","tired":"😪","bored":"😐","party":"🎉",
+
+  // Animals
+  "dog":"🐶","cat":"🐱","fish":"🐟","bird":"🐦","mouse":"🐭","cow":"🐮","pig":"🐷",
+  "lion":"🦁","tiger":"🐯","bear":"🐻","monkey":"🐵","octopus":"🐙","unicorn":"🦄",
+  "rabbit":"🐰","frog":"🐸","bee":"🐝","elephant":"🐘","snake":"🐍",
+
+  // Food & drink
+  "pizza":"🍕","burger":"🍔","cake":"🎂","icecream":"🍨","donut":"🍩",
+  "coffee":"☕","tea":"🍵","water":"💧","beer":"🍺","wine":"🍷","fruit":"🍎",
+  "apple":"🍎","banana":"🍌","cherry":"🍒","grapes":"🍇","lemon":"🍋","bread":"🍞",
+
+  // Objects
+  "car":"🚗","bike":"🚲","plane":"✈️","train":"🚆","bus":"🚌","phone":"📱",
+  "computer":"💻","book":"📖","pen":"🖊","money":"💵","gift":"🎁","clock":"🕒",
+  "camera":"📷","light":"💡","key":"🔑","door":"🚪","house":"🏠",
+
+  // Weather & Nature
+  "sun":"☀️","moon":"🌙","star":"⭐","cloud":"☁️","rain":"🌧","snow":"❄️",
+  "fire":"🔥","tree":"🌳","flower":"🌸","mountain":"🏔","river":"🏞","ocean":"🌊",
+
+  // Activities
+  "music":"🎵","dance":"💃","run":"🏃","swim":"🏊","play":"🎮","game":"🎮",
+  "soccer":"⚽","basketball":"🏀","travel":"🌍","fly":"🕊","write":"✍️","read":"📖",
+
+  // Common expressions
+  "ok":"👌","yes":"✅","no":"❌","100":"💯","wow":"😲","hi":"👋","hello":"👋",
+  "bye":"👋","thanks":"🙏","thank":"🙏","please":"🙏","sorry":"😔"
+};
+
+// Random fallback emojis
+const fallbackEmojis = ["🌈","🍩","🤖","👽","🎈","⚡","🥳","✨","🎵","🔥","💎","🪐","🦖"];
+
+function translateToEmojiAll(text){
+  let words = text.toLowerCase().split(/\s+/);
+  let result = words.map(word => {
+    word = word.replace(/[.,!?]/g,'');
+    // Replace word with dictionary emoji or fallback
+    return emojiDict[word] || fallbackEmojis[Math.floor(Math.random()*fallbackEmojis.length)];
   });
-});
-
-// Transcript Area
-const transcriptArea = document.getElementById('transcriptArea');
-function addTranscript(text) {
-  const p = document.createElement('p');
-  p.textContent = text;
-  transcriptArea.appendChild(p);
-  transcriptArea.scrollTop = transcriptArea.scrollHeight;
-  saveTranscript();
+  return result.join(" ");
 }
 
-// LocalStorage persistence
-function saveTranscript() {
-  localStorage.setItem('transcript', transcriptArea.innerHTML);
-}
-function loadTranscript() {
-  const saved = localStorage.getItem('transcript');
-  if(saved) transcriptArea.innerHTML = saved;
-}
-loadTranscript();
-
-// Copy transcript
-document.getElementById('copyBtn').addEventListener('click', () => {
-  navigator.clipboard.writeText(transcriptArea.innerText);
-  alert('Transcript copied!');
-});
-
-// Download transcript
-document.getElementById('downloadBtn').addEventListener('click', () => {
-  const blob = new Blob([transcriptArea.innerText], {type: "text/plain"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = "transcript.txt";
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-// Reset
-document.getElementById('resetBtn').addEventListener('click', () => {
-  transcriptArea.innerHTML = '';
-  localStorage.removeItem('transcript');
-});
-
-// --- Voice Transcription ---
-let recognition;
-if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.lang = 'en-US';
-
-  let finalTranscript = '';
-  recognition.onresult = (event) => {
-    let interim = '';
-    for(let i = event.resultIndex; i < event.results.length; ++i){
-      const transcript = event.results[i][0].transcript;
-      if(event.results[i].isFinal){
-        finalTranscript += transcript + '\n';
-        addTranscript(transcript);
-      } else {
-        interim += transcript;
-      }
-    }
-  }
-}
-
-document.getElementById('startVoice').addEventListener('click', () => {
-  if(recognition) recognition.start();
-});
-document.getElementById('stopVoice').addEventListener('click', () => {
-  if(recognition) recognition.stop();
-});
-
-// --- Video Transcription (placeholder) ---
-document.getElementById('transcribeVideo').addEventListener('click', () => {
-  const url = document.getElementById('videoURL').value.trim();
-  if(url){
-    addTranscript(`[Video transcription simulated for URL: ${url}]`);
+translateBtn.addEventListener('click', () => {
+  const inputText = textInput.value.trim();
+  if(inputText){
+    emojiOutput.textContent = translateToEmojiAll(inputText);
   }
 });
 
-// --- Translate (simulation) ---
-document.getElementById('translateBtn').addEventListener('click', () => {
-  const lang = document.getElementById('langSelect').value;
-  const text = transcriptArea.innerText;
-  if(text){
-    addTranscript(`[Translated to ${lang}]: ${text}`);
+// Copy
+copyBtn.addEventListener('click', () => {
+  if(emojiOutput.textContent){
+    navigator.clipboard.writeText(emojiOutput.textContent);
+    alert("Emoji copied!");
   }
 });
 
-// --- Meeting Simulation with timestamps ---
-document.getElementById('simulateMeeting').addEventListener('click', () => {
-  const sample = [
-    "Speaker 1: Welcome everyone to the meeting.",
-    "Speaker 2: Thanks! Let's review the updates.",
-    "Speaker 1: Project is on schedule.",
-    "Speaker 3: Any blockers?",
-    "Speaker 2: None so far."
-  ];
-  sample.forEach((line, i) => {
-    const timestamp = new Date();
-    timestamp.setMinutes(timestamp.getMinutes() + i);
-    addTranscript(`[${timestamp.getHours()}:${timestamp.getMinutes().toString().padStart(2,'0')}] ${line}`);
-  });
-});
-
-// --- Quick Notes ---
-document.getElementById('addNote').addEventListener('click', () => {
-  const note = document.getElementById('noteInput').value.trim();
-  if(note){
-    addTranscript(`[Note]: ${note}`);
-    document.getElementById('noteInput').value = '';
-  }
+// Clear
+clearBtn.addEventListener('click', () => {
+  textInput.value = "";
+  emojiOutput.textContent = "";
 });
