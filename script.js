@@ -1,4 +1,4 @@
-// Tab functionality
+// Tabs
 const tabs = document.querySelectorAll('.tabBtn');
 const tabContents = document.querySelectorAll('.tabContent');
 
@@ -12,14 +12,25 @@ tabs.forEach(tab => {
   });
 });
 
-// Transcript area
+// Transcript Area
 const transcriptArea = document.getElementById('transcriptArea');
 function addTranscript(text) {
   const p = document.createElement('p');
   p.textContent = text;
   transcriptArea.appendChild(p);
   transcriptArea.scrollTop = transcriptArea.scrollHeight;
+  saveTranscript();
 }
+
+// LocalStorage persistence
+function saveTranscript() {
+  localStorage.setItem('transcript', transcriptArea.innerHTML);
+}
+function loadTranscript() {
+  const saved = localStorage.getItem('transcript');
+  if(saved) transcriptArea.innerHTML = saved;
+}
+loadTranscript();
 
 // Copy transcript
 document.getElementById('copyBtn').addEventListener('click', () => {
@@ -27,9 +38,21 @@ document.getElementById('copyBtn').addEventListener('click', () => {
   alert('Transcript copied!');
 });
 
+// Download transcript
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const blob = new Blob([transcriptArea.innerText], {type: "text/plain"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "transcript.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
 // Reset
 document.getElementById('resetBtn').addEventListener('click', () => {
   transcriptArea.innerHTML = '';
+  localStorage.removeItem('transcript');
 });
 
 // --- Voice Transcription ---
@@ -41,12 +64,18 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
   recognition.interimResults = true;
   recognition.lang = 'en-US';
 
+  let finalTranscript = '';
   recognition.onresult = (event) => {
-    let transcript = '';
+    let interim = '';
     for(let i = event.resultIndex; i < event.results.length; ++i){
-      transcript += event.results[i][0].transcript;
+      const transcript = event.results[i][0].transcript;
+      if(event.results[i].isFinal){
+        finalTranscript += transcript + '\n';
+        addTranscript(transcript);
+      } else {
+        interim += transcript;
+      }
     }
-    transcriptArea.innerHTML = transcript;
   }
 }
 
@@ -74,7 +103,7 @@ document.getElementById('translateBtn').addEventListener('click', () => {
   }
 });
 
-// --- Meeting Simulation ---
+// --- Meeting Simulation with timestamps ---
 document.getElementById('simulateMeeting').addEventListener('click', () => {
   const sample = [
     "Speaker 1: Welcome everyone to the meeting.",
@@ -83,7 +112,11 @@ document.getElementById('simulateMeeting').addEventListener('click', () => {
     "Speaker 3: Any blockers?",
     "Speaker 2: None so far."
   ];
-  sample.forEach(line => addTranscript(line));
+  sample.forEach((line, i) => {
+    const timestamp = new Date();
+    timestamp.setMinutes(timestamp.getMinutes() + i);
+    addTranscript(`[${timestamp.getHours()}:${timestamp.getMinutes().toString().padStart(2,'0')}] ${line}`);
+  });
 });
 
 // --- Quick Notes ---
