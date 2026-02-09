@@ -3,59 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unified Transcriber</title>
+<title>Emoji Translator</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
-  <h1>Unified Transcriber</h1>
+  <h1>Emoji Translator</h1>
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tabBtn active" data-tab="voice">Voice</button>
-    <button class="tabBtn" data-tab="video">Video</button>
-    <button class="tabBtn" data-tab="translate">Translate</button>
-    <button class="tabBtn" data-tab="meeting">Meeting</button>
-    <button class="tabBtn" data-tab="notes">Notes</button>
-  </div>
+  <!-- Input -->
+  <textarea id="textInput" placeholder="Type your sentence here..."></textarea>
+  <button id="translateBtn">➡️ Translate to Emoji</button>
 
-  <!-- Tab Contents -->
-  <div id="voiceTab" class="tabContent">
-    <button id="startVoice">🎤 Start Recording</button>
-    <button id="stopVoice">⏹ Stop</button>
-  </div>
+  <!-- Output -->
+  <div id="emojiOutput"></div>
 
-  <div id="videoTab" class="tabContent hidden">
-    <input type="text" id="videoURL" placeholder="Paste video URL">
-    <button id="transcribeVideo">Transcribe Video</button>
-  </div>
-
-  <div id="translateTab" class="tabContent hidden">
-    <select id="langSelect">
-      <option value="es">Spanish</option>
-      <option value="fr">French</option>
-      <option value="de">German</option>
-    </select>
-    <button id="translateBtn">Translate Transcript</button>
-  </div>
-
-  <div id="meetingTab" class="tabContent hidden">
-    <button id="simulateMeeting">Simulate Meeting Transcript</button>
-  </div>
-
-  <div id="notesTab" class="tabContent hidden">
-    <input type="text" id="noteInput" placeholder="Type a quick note">
-    <button id="addNote">Add Note</button>
-  </div>
-
-  <!-- Transcript Area -->
-  <div id="transcriptArea"></div>
-
-  <!-- Action Buttons -->
+  <!-- Actions -->
   <div class="actions">
-    <button id="copyBtn">📋 Copy Transcript</button>
-    <button id="downloadBtn">💾 Download Transcript</button>
-    <button id="resetBtn">🗑 Reset</button>
+    <button id="copyBtn">📋 Copy</button>
+    <button id="clearBtn">🗑 Clear</button>
   </div>
 </div>
 
