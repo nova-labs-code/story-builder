@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Standup</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="meeting.html">Meeting Notes</a>
+  <a href="standup.html" class="active">Daily Standup</a>
+  <a href="templates.html">Templates</a>
+</nav>
+
+<div class="container">
+  <h1>Daily Standup Tracker</h1>
+  <input type="text" id="yesterday" placeholder="Yesterday's work">
+  <input type="text" id="today" placeholder="Today's tasks">
+  <input type="text" id="blockers" placeholder="Blockers">
+  <button id="saveStandup">💾 Save Entry</button>
+  <button id="clearStandup">🗑 Clear</button>
+
+  <h2>Saved Standups</h2>
+  <div id="standupSaved"></div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  initStandup();
+</script>
+</body>
+</html>
