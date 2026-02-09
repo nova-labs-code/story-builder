@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Notes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="meeting.html" class="active">Meeting Notes</a>
+  <a href="standup.html">Daily Standup</a>
+  <a href="templates.html">Templates</a>
+</nav>
+
+<div class="container">
+  <h1>Meeting Notes</h1>
+  <textarea id="meetingInput" placeholder="Type your meeting notes here..."></textarea>
+  <button id="saveMeeting">💾 Save Note</button>
+  <button id="copyMeeting">📋 Copy Note</button>
+  <button id="clearMeeting">🗑 Clear</button>
+
+  <h2>Saved Notes</h2>
+  <div id="meetingSaved"></div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  initMeetingNotes();
+</script>
+</body>
+</html>
