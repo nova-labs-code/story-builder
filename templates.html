@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Templates</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="meeting.html">Meeting Notes</a>
+  <a href="standup.html">Daily Standup</a>
+  <a href="templates.html" class="active">Templates</a>
+</nav>
+
+<div class="container">
+  <h1>Message / Email Templates</h1>
+  <textarea id="templateInput" placeholder="Write your template here..."></textarea>
+  <button id="saveTemplate">💾 Save Template</button>
+  <button id="copyTemplate">📋 Copy Template</button>
+  <button id="clearTemplate">🗑 Clear</button>
+
+  <h2>Saved Templates</h2>
+  <div id="templateSaved"></div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  initTemplates();
+</script>
+</body>
+</html>
