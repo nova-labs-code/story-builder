@@ -1,58 +1,96 @@
-const storyArea = document.getElementById('storyArea');
-const randomBtn = document.getElementById('randomBtn');
-const writeBtn = document.getElementById('writeBtn');
-const wordBtn = document.getElementById('wordBtn');
-const inputArea = document.getElementById('inputArea');
-const userInput = document.getElementById('userInput');
-const submitBtn = document.getElementById('submitBtn');
-const resetBtn = document.getElementById('resetBtn');
+// Tab functionality
+const tabs = document.querySelectorAll('.tabBtn');
+const tabContents = document.querySelectorAll('.tabContent');
 
-const randomSentences = [
-  "The cat wore a tiny top hat.",
-  "Suddenly, a spaceship appeared in the backyard.",
-  "She danced on the clouds while singing.",
-  "A mysterious box arrived on the doorstep.",
-  "The dragon sneezed and rained glitter everywhere."
-];
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.tab;
+    tabContents.forEach(tc => tc.classList.add('hidden'));
+    document.getElementById(target + 'Tab').classList.remove('hidden');
+  });
+});
 
-const randomWords = ["unicorn", "pickle", "octopus", "spaceship", "pirate", "rainbow"];
-
-function addSentence(text) {
+// Transcript area
+const transcriptArea = document.getElementById('transcriptArea');
+function addTranscript(text) {
   const p = document.createElement('p');
   p.textContent = text;
-  storyArea.appendChild(p);
-  storyArea.scrollTop = storyArea.scrollHeight;
+  transcriptArea.appendChild(p);
+  transcriptArea.scrollTop = transcriptArea.scrollHeight;
 }
 
-// Random sentence
-randomBtn.addEventListener('click', () => {
-  const sentence = randomSentences[Math.floor(Math.random() * randomSentences.length)];
-  addSentence(sentence);
+// Copy transcript
+document.getElementById('copyBtn').addEventListener('click', () => {
+  navigator.clipboard.writeText(transcriptArea.innerText);
+  alert('Transcript copied!');
 });
 
-// Write your own
-writeBtn.addEventListener('click', () => {
-  inputArea.classList.remove('hidden');
-  userInput.value = '';
-  userInput.focus();
+// Reset
+document.getElementById('resetBtn').addEventListener('click', () => {
+  transcriptArea.innerHTML = '';
 });
 
-// Include random word
-wordBtn.addEventListener('click', () => {
-  const word = randomWords[Math.floor(Math.random() * randomWords.length)];
-  inputArea.classList.remove('hidden');
-  userInput.value = `I saw a ${word}...`;
-  userInput.focus();
+// --- Voice Transcription ---
+let recognition;
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+
+  recognition.onresult = (event) => {
+    let transcript = '';
+    for(let i = event.resultIndex; i < event.results.length; ++i){
+      transcript += event.results[i][0].transcript;
+    }
+    transcriptArea.innerHTML = transcript;
+  }
+}
+
+document.getElementById('startVoice').addEventListener('click', () => {
+  if(recognition) recognition.start();
+});
+document.getElementById('stopVoice').addEventListener('click', () => {
+  if(recognition) recognition.stop();
 });
 
-// Submit user sentence
-submitBtn.addEventListener('click', () => {
-  const text = userInput.value.trim();
-  if(text) addSentence(text);
-  inputArea.classList.add('hidden');
+// --- Video Transcription (placeholder) ---
+document.getElementById('transcribeVideo').addEventListener('click', () => {
+  const url = document.getElementById('videoURL').value.trim();
+  if(url){
+    addTranscript(`[Video transcription simulated for URL: ${url}]`);
+  }
 });
 
-// Reset story
-resetBtn.addEventListener('click', () => {
-  storyArea.innerHTML = '';
+// --- Translate (simulation) ---
+document.getElementById('translateBtn').addEventListener('click', () => {
+  const lang = document.getElementById('langSelect').value;
+  const text = transcriptArea.innerText;
+  if(text){
+    addTranscript(`[Translated to ${lang}]: ${text}`);
+  }
+});
+
+// --- Meeting Simulation ---
+document.getElementById('simulateMeeting').addEventListener('click', () => {
+  const sample = [
+    "Speaker 1: Welcome everyone to the meeting.",
+    "Speaker 2: Thanks! Let's review the updates.",
+    "Speaker 1: Project is on schedule.",
+    "Speaker 3: Any blockers?",
+    "Speaker 2: None so far."
+  ];
+  sample.forEach(line => addTranscript(line));
+});
+
+// --- Quick Notes ---
+document.getElementById('addNote').addEventListener('click', () => {
+  const note = document.getElementById('noteInput').value.trim();
+  if(note){
+    addTranscript(`[Note]: ${note}`);
+    document.getElementById('noteInput').value = '';
+  }
 });
