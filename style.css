@@ -1,63 +1,68 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #fff1e6;
+  background: #f9f9f9;
+}
+
+nav {
   display: flex;
-  justify-content: center;
-  padding: 20px 0;
+  justify-content: space-around;
+  background: #2196f3;
+  padding: 10px 0;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a.active {
+  text-decoration: underline;
 }
 
 .container {
-  width: 95%;
   max-width: 500px;
-  text-align: center;
+  margin: 20px auto;
+  padding: 10px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 h1 {
-  margin-bottom: 15px;
-  font-size: 1.8rem;
-  color: #ff6f61;
+  color: #2196f3;
+  text-align: center;
 }
 
-textarea {
+textarea, input {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px 0;
   font-size: 1rem;
-  margin-bottom: 10px;
-  resize: vertical;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 button {
   padding: 10px 15px;
-  margin: 5px;
+  margin: 5px 2px;
   border: none;
-  border-radius: 8px;
-  background-color: #ff6f61;
+  border-radius: 6px;
+  background-color: #2196f3;
   color: white;
-  font-size: 1rem;
   cursor: pointer;
   transition: 0.2s;
 }
 
 button:hover {
-  background-color: #ff836f;
+  background-color: #1976d2;
 }
 
-#emojiOutput {
-  min-height: 80px;
-  margin: 10px 0;
-  padding: 12px;
-  background-color: #fff3e0;
-  border-radius: 8px;
-  font-size: 1.5rem;
-  word-wrap: break-word;
-  text-align: left;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+#meetingSaved, #standupSaved, #templateSaved {
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
 }
