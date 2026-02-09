@@ -1,61 +1,124 @@
-const textInput = document.getElementById('textInput');
-const translateBtn = document.getElementById('translateBtn');
-const emojiOutput = document.getElementById('emojiOutput');
-const copyBtn = document.getElementById('copyBtn');
-const clearBtn = document.getElementById('clearBtn');
+// ----------------- Meeting Notes -----------------
+function initMeetingNotes() {
+  const input = document.getElementById('meetingInput');
+  const saveBtn = document.getElementById('saveMeeting');
+  const copyBtn = document.getElementById('copyMeeting');
+  const clearBtn = document.getElementById('clearMeeting');
+  const savedDiv = document.getElementById('meetingSaved');
 
-// Expanded emoji dictionary
-const emojiDict = {
-  "love":"❤️","heart":"❤️","happy":"😊","smile":"😊","laugh":"😂","sad":"😢",
-  "cry":"😢","angry":"😡","surprised":"😲","excited":"🤩","cool":"😎",
-  "sleep":"😴","tired":"😪","bored":"😐","party":"🎉",
-  "dog":"🐶","cat":"🐱","fish":"🐟","bird":"🐦","mouse":"🐭","cow":"🐮","pig":"🐷",
-  "lion":"🦁","tiger":"🐯","bear":"🐻","monkey":"🐵","octopus":"🐙","unicorn":"🦄",
-  "rabbit":"🐰","frog":"🐸","bee":"🐝","elephant":"🐘","snake":"🐍",
-  "pizza":"🍕","burger":"🍔","cake":"🎂","icecream":"🍨","donut":"🍩",
-  "coffee":"☕","tea":"🍵","water":"💧","beer":"🍺","wine":"🍷","fruit":"🍎",
-  "apple":"🍎","banana":"🍌","cherry":"🍒","grapes":"🍇","lemon":"🍋","bread":"🍞",
-  "car":"🚗","bike":"🚲","plane":"✈️","train":"🚆","bus":"🚌","phone":"📱",
-  "computer":"💻","book":"📖","pen":"🖊","money":"💵","gift":"🎁","clock":"🕒",
-  "camera":"📷","light":"💡","key":"🔑","door":"🚪","house":"🏠",
-  "sun":"☀️","moon":"🌙","star":"⭐","cloud":"☁️","rain":"🌧","snow":"❄️",
-  "fire":"🔥","tree":"🌳","flower":"🌸","mountain":"🏔","river":"🏞","ocean":"🌊",
-  "music":"🎵","dance":"💃","run":"🏃","swim":"🏊","play":"🎮","game":"🎮",
-  "soccer":"⚽","basketball":"🏀","travel":"🌍","fly":"🕊","write":"✍️","read":"📖",
-  "ok":"👌","yes":"✅","no":"❌","100":"💯","wow":"😲","hi":"👋","hello":"👋",
-  "bye":"👋","thanks":"🙏","thank":"🙏","please":"🙏","sorry":"😔"
-};
+  // Load saved
+  let notes = JSON.parse(localStorage.getItem('meetingNotes') || '[]');
+  renderMeeting(notes);
 
-// Random fallback emojis
-const fallbackEmojis = ["🌈","🍩","🤖","👽","🎈","⚡","🥳","✨","🎵","🔥","💎","🪐","🦖"];
+  saveBtn.onclick = () => {
+    const text = input.value.trim();
+    if(text){
+      const timestamp = new Date().toLocaleString();
+      notes.push(`[${timestamp}] ${text}`);
+      localStorage.setItem('meetingNotes', JSON.stringify(notes));
+      renderMeeting(notes);
+      input.value = '';
+    }
+  };
 
-function translateToEmojiAll(text){
-  // Match words including punctuation
-  let words = text.match(/\b[\w']+\b/g) || [];
-  let result = words.map(word => {
-    const lower = word.toLowerCase();
-    return emojiDict[lower] || fallbackEmojis[Math.floor(Math.random()*fallbackEmojis.length)];
-  });
-  return result.join(" ");
+  copyBtn.onclick = () => {
+    navigator.clipboard.writeText(notes.join('\n'));
+    alert('Notes copied!');
+  };
+
+  clearBtn.onclick = () => {
+    if(confirm('Clear all meeting notes?')){
+      notes = [];
+      localStorage.setItem('meetingNotes','[]');
+      renderMeeting(notes);
+    }
+  };
+
+  function renderMeeting(arr){
+    savedDiv.innerHTML = arr.map(n => `<p>${n}</p>`).join('');
+  }
 }
 
-translateBtn.addEventListener('click', () => {
-  const inputText = textInput.value.trim();
-  if(inputText){
-    emojiOutput.textContent = translateToEmojiAll(inputText);
-  }
-});
+// ----------------- Daily Standup -----------------
+function initStandup() {
+  const yesterdayInput = document.getElementById('yesterday');
+  const todayInput = document.getElementById('today');
+  const blockersInput = document.getElementById('blockers');
+  const saveBtn = document.getElementById('saveStandup');
+  const clearBtn = document.getElementById('clearStandup');
+  const savedDiv = document.getElementById('standupSaved');
 
-// Copy
-copyBtn.addEventListener('click', () => {
-  if(emojiOutput.textContent){
-    navigator.clipboard.writeText(emojiOutput.textContent);
-    alert("Emoji copied!");
-  }
-});
+  let entries = JSON.parse(localStorage.getItem('standupEntries') || '[]');
+  renderStandup(entries);
 
-// Clear
-clearBtn.addEventListener('click', () => {
-  textInput.value = "";
-  emojiOutput.textContent = "";
-});
+  saveBtn.onclick = () => {
+    const y = yesterdayInput.value.trim();
+    const t = todayInput.value.trim();
+    const b = blockersInput.value.trim();
+    if(y || t || b){
+      const date = new Date().toLocaleDateString();
+      entries.push({date, yesterday:y, today:t, blockers:b});
+      localStorage.setItem('standupEntries', JSON.stringify(entries));
+      renderStandup(entries);
+      yesterdayInput.value = todayInput.value = blockersInput.value = '';
+    }
+  };
+
+  clearBtn.onclick = () => {
+    if(confirm('Clear all standup entries?')){
+      entries = [];
+      localStorage.setItem('standupEntries','[]');
+      renderStandup(entries);
+    }
+  };
+
+  function renderStandup(arr){
+    savedDiv.innerHTML = arr.map(e =>
+      `<p><strong>${e.date}</strong><br>
+      Yesterday: ${e.yesterday}<br>
+      Today: ${e.today}<br>
+      Blockers: ${e.blockers}</p>`
+    ).join('');
+  }
+}
+
+// ----------------- Templates -----------------
+function initTemplates() {
+  const input = document.getElementById('templateInput');
+  const saveBtn = document.getElementById('saveTemplate');
+  const copyBtn = document.getElementById('copyTemplate');
+  const clearBtn = document.getElementById('clearTemplate');
+  const savedDiv = document.getElementById('templateSaved');
+
+  let templates = JSON.parse(localStorage.getItem('templates') || '[]');
+  renderTemplates(templates);
+
+  saveBtn.onclick = () => {
+    const text = input.value.trim();
+    if(text){
+      templates.push(text);
+      localStorage.setItem('templates', JSON.stringify(templates));
+      renderTemplates(templates);
+      input.value = '';
+    }
+  };
+
+  copyBtn.onclick = () => {
+    if(templates.length){
+      navigator.clipboard.writeText(templates.join('\n\n'));
+      alert('Templates copied!');
+    }
+  };
+
+  clearBtn.onclick = () => {
+    if(confirm('Clear all templates?')){
+      templates = [];
+      localStorage.setItem('templates','[]');
+      renderTemplates(templates);
+    }
+  };
+
+  function renderTemplates(arr){
+    savedDiv.innerHTML = arr.map(t => `<p>${t}</p>`).join('');
+  }
+}
