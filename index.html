@@ -3,27 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emoji Translator</title>
+<title>Work Helper Dashboard</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<nav>
+  <a href="index.html" class="active">Home</a>
+  <a href="meeting.html">Meeting Notes</a>
+  <a href="standup.html">Daily Standup</a>
+  <a href="templates.html">Templates</a>
+</nav>
+
 <div class="container">
-  <h1>Emoji Translator</h1>
-
-  <!-- Input -->
-  <textarea id="textInput" placeholder="Type your sentence here..."></textarea>
-  <button id="translateBtn">➡️ Translate to Emoji</button>
-
-  <!-- Output -->
-  <div id="emojiOutput"></div>
-
-  <!-- Actions -->
-  <div class="actions">
-    <button id="copyBtn">📋 Copy</button>
-    <button id="clearBtn">🗑 Clear</button>
-  </div>
+  <h1>Work Helper</h1>
+  <p>Welcome! This site helps you stay productive at work with meeting notes, daily standups, and quick templates.</p>
+  <ul>
+    <li><a href="meeting.html">📋 Meeting Notes</a></li>
+    <li><a href="standup.html">📝 Daily Standup Tracker</a></li>
+    <li><a href="templates.html">✉️ Message / Email Templates</a></li>
+  </ul>
 </div>
-
-<script src="script.js"></script>
 </body>
 </html>
